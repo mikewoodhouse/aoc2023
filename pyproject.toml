@@ -1,0 +1,25 @@
+[tool.black]
+line-length = 119 # override black's default line-length
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.tox
+  | venv
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+# make it compatible with black
+profile = "black"
+
+[tool.pytest.ini-options]
+filterwarnings = [
+  "ignore:Deprecated call to `pkg_resources\\.declare_namespace\\('.*'\\):DeprecationWarning",
+  "ignore::DeprecationWarning:google.rpc",
+]
