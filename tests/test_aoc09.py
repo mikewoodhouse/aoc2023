@@ -1,4 +1,12 @@
-from aoc09.aoc09 import diff, diff_to_zeroes, extrapolate, parse_line, part1, part2
+from aoc09.aoc09 import (
+    diff,
+    diff_to_zeroes,
+    extrapolate,
+    extrapolate_left,
+    parse_line,
+    part1,
+    part2,
+)
 from lib import data
 
 
@@ -26,6 +34,11 @@ def test_extrapolate():
     assert res == 11
 
 
-def test_sample():
+def test_part1():
     lines = data(9, "sample")
     assert part1(lines) == 114
+
+
+def test_part2():
+    lines = data(9, "sample")
+    assert part2(lines) == 2

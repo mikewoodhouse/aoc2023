@@ -32,6 +32,14 @@ def extrapolate(series: list[list[int]]) -> int:
     return series[0][-1]
 
 
+def extrapolate_left(series: list[list[int]]) -> int:
+    for idx in range(len(series) - 1, 0, -1):
+        upper = series[idx - 1][0]
+        lower = series[idx][0]
+        series[idx - 1].insert(0, upper - lower)
+    return series[0][0]
+
+
 def part1(lines: list[str]) -> int:
     tot = 0
     for line in lines:
@@ -45,4 +53,12 @@ def part1(lines: list[str]) -> int:
 
 
 def part2(lines: list[str]) -> int:
-    return 0
+    tot = 0
+    for line in lines:
+        try:
+            vals = parse_line(line)
+            diff_series = diff_to_zeroes(vals)
+            tot += extrapolate_left(diff_series)
+        except Exception as e:
+            ic(line)
+    return tot
