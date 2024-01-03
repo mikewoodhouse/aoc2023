@@ -55,10 +55,7 @@ def part1(lines: list[str]) -> int:
 def part2(lines: list[str]) -> int:
     tot = 0
     for line in lines:
-        try:
-            vals = parse_line(line)
-            diff_series = diff_to_zeroes(vals)
-            tot += extrapolate_left(diff_series)
-        except Exception as e:
-            ic(line)
+        vals = parse_line(line)
+        diff_series = diff_to_zeroes(vals)
+        tot += extrapolate_left(diff_series)
     return tot
