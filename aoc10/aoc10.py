@@ -16,10 +16,10 @@ POSSIBLE_EXITS = {
 }
 
 MOVES = {
-    "N": ((-1, 0), "|F7"),
-    "E": ((0, 1), "-J7"),
-    "S": ((1, 0), "|LJ"),
-    "W": ((0, -1), "-FL"),
+    "N": ((-1, 0), "|F7S"),
+    "E": ((0, 1), "-J7S"),
+    "S": ((1, 0), "|LJS"),
+    "W": ((0, -1), "-FLS"),
 }
 
 
@@ -41,8 +41,15 @@ class Traveller:
 
 class Map:
     def __init__(self, lines: list[str]) -> None:
-        self.tiles = lines
-        self.size = (len(self.tiles), len(self.tiles[0]))
+        def modded_line(s: str) -> list[str]:
+            return ["."] + list(s) + ["."]
+
+        self.tiles = [modded_line(line) for line in lines]
+        self.line_len = len(self.tiles[0])
+        self.size = (self.line_len, self.line_len)
+        self.tiles.insert(0, ["."] * self.line_len)
+        self.tiles.append(["."] * self.line_len)
+        self.row_count = len(self.tiles)
 
     def start(self) -> tuple[int, int]:
         row_idx, row = next((idx, row) for idx, row in enumerate(self.tiles) if "S" in row)
@@ -85,6 +92,67 @@ class Map:
         ic(travellers)
         return travellers[0].step_count
 
+    def set_tile(self, pt: tuple[int, int], char: str) -> None:
+        self.tiles[pt[0]][pt[1]] = char
+
+    @property
+    def dot_count(self) -> int:
+        def line_dots(s: list[str]) -> int:
+            return s.count(".")
+
+        return sum(line_dots(r) for r in self.tiles)
+
+    def dejunk(self) -> None:
+        removals = 1
+        while removals > 0:
+            removals = 0
+            for row_idx, row in enumerate(self.tiles):
+                for col_idx, ch in enumerate(row):
+                    pt = (row_idx, col_idx)
+                    if ch == ".":
+                        continue
+                    expected_exits = POSSIBLE_EXITS[ch]
+                    connections_found = 0
+                    for ex in expected_exits:
+                        vector, required = MOVES[ex]
+                        if self.tile_at(plus(pt, vector)) in required:
+                            connections_found += 1
+                    if connections_found != 2:
+                        self.set_tile(pt, ".")
+                        removals += 1
+
+    def mark_outsiders(self) -> None:
+        for row in self.tiles:
+            self.mark_outsiders_in_row(row)
+        # for col in range(self.line_len):
+        #     self.mark_outsiders_in_col(col)
+
+    def mark_outsiders_in_col(self, col: int) -> None:
+        outside = True
+        for idx, row in enumerate(self.tiles):
+            ch = row[col]
+            if idx == 0:
+                row[col] = "X"
+            if ch in "SJ7FL-":
+                outside = not outside
+            if ch == "." and outside:
+                row[col] = "X"
+
+    def mark_outsiders_in_row(self, row: list[str]) -> None:
+        outside = True
+        row[0] = "X"
+        for idx, ch in enumerate(row):
+            if idx == 0:
+                continue
+            if ch in "|S7JFL":
+                outside = not outside
+            if ch == "." and outside:
+                row[idx] = "X"
+
+    def __repr__(self) -> str:
+        lines = ["".join(tiles) for tiles in self.tiles]
+        return "\n".join(lines)
+
 
 def part1(lines: list[str]) -> int:
     m = Map(lines)
@@ -92,4 +160,7 @@ def part1(lines: list[str]) -> int:
 
 
 def part2(lines: list[str]) -> int:
-    return 0
+    m = Map(lines)
+    m.dejunk()
+    m.mark_outsiders()
+    return m.dot_count
