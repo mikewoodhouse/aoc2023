@@ -1,1 +1,1 @@
-from .aoc11 import Map, part1, part2
+from .aoc11 import Map, SmartMap, part1, part2
