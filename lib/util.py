@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from pathlib import Path
 
 
@@ -6,3 +7,9 @@ def data(day: int, filename: str) -> list[str]:
         s.strip()
         for s in ((Path(__file__).parent.parent / f"aoc{day:02}" / f"{filename}.txt").read_text().split("\n"))
     ]
+
+
+@dataclass
+class Pt:
+    row: int
+    col: int
