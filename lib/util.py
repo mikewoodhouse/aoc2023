@@ -9,6 +9,10 @@ def data(day: int, filename: str) -> list[str]:
     ]
 
 
+def single_line(day: int, filename: str) -> list[str]:
+    return (Path(__file__).parent.parent / f"aoc{day:02}" / f"{filename}.txt").read_text().split(",")
+
+
 @dataclass
 class Pt:
     row: int

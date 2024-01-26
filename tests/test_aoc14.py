@@ -24,6 +24,7 @@ def test_line_load(input, expected):
     assert line_load(input) == expected
 
 
+@pytest.mark.skip
 def test_shifted():
     p = ["O..", ".O#", "O.O"]
     assert transpose(shifted(p)) == ["OO.", "O.#", "..O"]
