@@ -1,1 +1,1 @@
-from .aoc12 import Node, part1, part2
+from .aoc12 import Argh, Node, part1, part2

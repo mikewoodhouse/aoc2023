@@ -13,3 +13,7 @@ def data(day: int, filename: str) -> list[str]:
 class Pt:
     row: int
     col: int
+
+
+def transpose(a: list[str]) -> list[str]:
+    return ["".join(x) for x in zip(*a)]

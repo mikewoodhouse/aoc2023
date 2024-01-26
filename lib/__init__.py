@@ -1,1 +1,1 @@
-from .util import Pt, data
+from .util import Pt, data, transpose
